@@ -18,7 +18,7 @@ Error generating stack: `+e.message+`
                 relative z-20 transition-all duration-300 inline-block
                 ${M?"font-extrabold scale-105":""}
                 group-hover:-translate-y-1 group-hover:scale-110
-              `,style:{transitionProperty:"color,transform"},children:L.label}),x.jsx("span",{className:`
+              `,children:L.label}),x.jsx("span",{className:`
                 absolute left-1/2 -translate-x-1/2 bottom-1 h-1 w-4 sm:w-6 rounded-full
                 bg-zinc-900 dark:bg-white transition-all duration-300
                 ${M?"opacity-80 scale-x-100":"opacity-0 scale-x-50"}
