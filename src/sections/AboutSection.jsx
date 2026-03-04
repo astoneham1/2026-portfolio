@@ -28,7 +28,7 @@ export const AboutSection = ({ sectionRefs }) => (
     <div className="space-y-5 pt-2 opacity-0 animate-[fadeBlurIn_0.6s_ease-out_forwards_300ms]">
       <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100 tracking-tight">Tech Stack</h3>
       <div className="flex flex-col gap-6">
-        <SkillRow category="Languages" skills="Java, TypeScript, JavaScript, Python, C, Haskell" />
+        <SkillRow category="Languages" skills="Java, TypeScript, JavaScript, Python" />
         <SkillRow category="Frontend" skills="React, Tailwind CSS, HTML, CSS, Swing" />
         <SkillRow category="Backend" skills="Spring Boot, Node.js" />
         <SkillRow category="Tools" skills="Git, Linux, Bash, SQLite" />
