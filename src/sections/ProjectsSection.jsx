@@ -5,12 +5,19 @@ export const ProjectsSection = ({ sectionRefs }) => (
   <section id="projects" ref={sectionRefs.projects} className="flex flex-col flex-1 space-y-10 min-h-[80vh]">
     <h2 className="text-2xl sm:text-3xl font-bold text-zinc-900 dark:text-zinc-100 tracking-tight animate-[fadeBlurIn_0.6s_ease-out_forwards]">Selected Projects</h2>
     <div className="flex flex-col gap-4 group opacity-0 animate-[fadeBlurIn_0.6s_ease-out_forwards_150ms]">
+        <ProjectItem 
+        title="Guess The Movie"
+        description="Think you know movies? Test your knowledge with this interactive quiz game."
+        tags="HTML, CSS, JavaScript"
+        link="https://movies.alexstoneham.co.uk"
+        index={0}
+      />
       <ProjectItem 
         title="Nonograms Puzzle"
         description="A fully functional GUI puzzle game featuring checking and solving logic."
         tags="Java, Swing, JSON"
         link="#"
-        index={0}
+        index={2}
       />
       <ProjectItem 
         title="Breakout Game"
@@ -18,13 +25,6 @@ export const ProjectsSection = ({ sectionRefs }) => (
         tags="Java, Processing"
         link="#"
         index={1}
-      />
-      <ProjectItem 
-        title="EAFC 24 Pack Opener"
-        description="Lightweight app to pack cards, build drafts, and play endless minigames."
-        tags="Livecode, SQLite"
-        link="#"
-        index={2}
       />
     </div>
     <a

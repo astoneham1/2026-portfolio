@@ -8,7 +8,7 @@ export const IntroSection = ({ sectionRefs }) => (
       <div className="flex-shrink-0 opacity-0 animate-[fadeBlurIn_0.8s_ease-out_forwards]">
         <div className="w-48 h-48 sm:w-64 sm:h-64 rounded-full bg-gradient-to-br from-zinc-200 to-zinc-300 dark:from-zinc-700 dark:to-zinc-800 flex items-center justify-center overflow-hidden border-2 border-zinc-300 dark:border-zinc-700 shadow-lg">
           <img 
-            src="/2026web/cover.JPG" 
+            src="/2026web/IMG_3915.jpeg" 
             alt="Alexander Stoneham" 
             className="w-full h-full object-cover"
           />
