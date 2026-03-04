@@ -1,0 +1,40 @@
+import { ProjectItem } from '../components/ProjectItem';
+import { ArrowUpRight } from 'lucide-react';
+
+export const ProjectsSection = ({ sectionRefs }) => (
+  <section id="projects" ref={sectionRefs.projects} className="flex flex-col flex-1 space-y-10 min-h-[80vh]">
+    <h2 className="text-2xl sm:text-3xl font-bold text-zinc-900 dark:text-zinc-100 tracking-tight animate-[fadeBlurIn_0.6s_ease-out_forwards]">Selected Projects</h2>
+    <div className="flex flex-col gap-4 group opacity-0 animate-[fadeBlurIn_0.6s_ease-out_forwards_150ms]">
+      <ProjectItem 
+        title="Nonograms Puzzle"
+        description="A fully functional GUI puzzle game featuring checking and solving logic."
+        tags="Java, Swing, JSON"
+        link="#"
+        index={0}
+      />
+      <ProjectItem 
+        title="Breakout Game"
+        description="An arcade-style game with multiple levels, power-ups, and a custom progression system."
+        tags="Java, Processing"
+        link="#"
+        index={1}
+      />
+      <ProjectItem 
+        title="EAFC 24 Pack Opener"
+        description="Lightweight app to pack cards, build drafts, and play endless minigames."
+        tags="Livecode, SQLite"
+        link="#"
+        index={2}
+      />
+    </div>
+    <a
+      href="https://projects.alexstoneham.co.uk"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 font-semibold transition-all duration-200 hover:shadow-lg hover:scale-105 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400 dark:focus-visible:ring-zinc-600 w-fit cursor-pointer"
+    >
+      View All Projects
+      <ArrowUpRight size={18} className="transition-transform duration-300" />
+    </a>
+  </section>
+);
