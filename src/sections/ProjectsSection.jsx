@@ -29,8 +29,6 @@ export const ProjectsSection = ({ sectionRefs }) => (
     </div>
     <a
       href="https://projects.alexstoneham.co.uk"
-      target="_blank"
-      rel="noopener noreferrer"
       className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 font-semibold transition-all duration-200 hover:shadow-lg hover:scale-105 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400 dark:focus-visible:ring-zinc-600 w-fit cursor-pointer"
     >
       View All Projects
