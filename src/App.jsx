@@ -14,11 +14,6 @@ const App = () => {
   const [theme, setTheme] = useState('system');
   const [systemDark, setSystemDark] = useState(false);
 
-  // Smooth scroll to top when changing tabs
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, [activeTab]);
-
   // Listen to system theme changes
   useEffect(() => {
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
@@ -49,6 +44,41 @@ const App = () => {
     else setTheme('system');
   };
 
+  // Track section positions for navbar highlight
+  const sectionRefs = {
+    intro: useRef(null),
+    about: useRef(null),
+    projects: useRef(null),
+    skills: useRef(null),
+  };
+
+  // Update activeTab based on scroll position
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollY = window.scrollY;
+      const threshold = 200; // Distance from top to consider section active
+      
+      const offsets = Object.entries(sectionRefs).map(([id, ref]) => {
+        if (!ref.current) return { id, offset: Infinity };
+        const rect = ref.current.getBoundingClientRect();
+        const offset = rect.top + scrollY;
+        return { id, offset };
+      });
+      
+      // Find the section whose offset is closest to current scroll position
+      const active = offsets.reduce((closest, current) => {
+        const closestDist = closest.offset - scrollY;
+        const currentDist = current.offset - scrollY;
+        return Math.abs(currentDist) < Math.abs(closestDist) ? current : closest;
+      });
+      
+      setActiveTab(active.id);
+    };
+    
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   // --- Bubble highlight logic ---
   const tabRefs = useRef([]);
   const navBarRef = useRef(null);
@@ -70,6 +100,18 @@ const App = () => {
     }
   }, [activeTab, tabRefs, navBarRef]);
 
+  // Scroll to section on navbar click
+  const handleNavClick = (id) => {
+    if (id === 'intro') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      const ref = sectionRefs[id];
+      if (ref && ref.current) {
+        ref.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
+  };
+
   return (
     <div className="min-h-screen bg-white dark:bg-[#09090b] text-zinc-600 dark:text-zinc-400 font-sans selection:bg-zinc-900 selection:text-white dark:selection:bg-white dark:selection:text-zinc-900 transition-colors duration-300 flex flex-col relative overflow-hidden">
       
@@ -89,103 +131,90 @@ const App = () => {
       </button>
 
       {/* Dynamic Content Area */}
-      <main className="flex-1 max-w-2xl mx-auto w-full px-6 pt-24 pb-32 flex flex-col relative z-10">
-        
-        {activeTab === 'intro' && (
-          <div className="flex flex-col justify-center flex-1">
-            <h1 className="text-5xl sm:text-6xl font-extrabold text-zinc-900 dark:text-zinc-100 tracking-tighter mb-4 animate-[fadeBlurIn_0.8s_ease-out_forwards]">
-              Alessandro Stoneham.
-            </h1>
-            <p className="text-lg sm:text-xl font-medium text-zinc-500 dark:text-zinc-400 opacity-0 animate-[fadeBlurIn_0.8s_ease-out_forwards_150ms]">
-              Computer Science Student <span className="text-zinc-300 dark:text-zinc-700 mx-1">/</span> Developer
-            </p>
-            
-            <div className="mt-10 flex flex-wrap gap-4 opacity-0 animate-[fadeBlurIn_0.8s_ease-out_forwards_300ms]">
-              <IntroButton href="https://linkedin.com/in/yourprofile" label="LinkedIn" icon={<Linkedin size={16} />} />
-              <IntroButton href="https://github.com/yourusername" label="GitHub" icon={<Github size={16} />} />
-              <IntroButton href="/cv.pdf" label="CV" icon={<FileText size={16} />} />
+      <main className="flex-1 max-w-2xl mx-auto w-full px-6 pt-24 pb-32 flex flex-col relative z-10 space-y-32">
+        {/* All sections rendered in order, continuous scroll */}
+        <section id="intro" ref={sectionRefs.intro} className="flex flex-col justify-center flex-1 min-h-[80vh]">
+          <h1 className="text-5xl sm:text-6xl font-extrabold text-zinc-900 dark:text-zinc-100 tracking-tighter mb-4 animate-[fadeBlurIn_0.8s_ease-out_forwards]">
+            Alessandro Stoneham.
+          </h1>
+          <p className="text-lg sm:text-xl font-medium text-zinc-500 dark:text-zinc-400 opacity-0 animate-[fadeBlurIn_0.8s_ease-out_forwards_150ms]">
+            Computer Science Student <span className="text-zinc-300 dark:text-zinc-700 mx-1">/</span> Developer
+          </p>
+          <div className="mt-10 flex flex-wrap gap-4 opacity-0 animate-[fadeBlurIn_0.8s_ease-out_forwards_300ms]">
+            <IntroButton href="https://linkedin.com/in/yourprofile" label="LinkedIn" icon={<Linkedin size={16} />} />
+            <IntroButton href="https://github.com/yourusername" label="GitHub" icon={<Github size={16} />} />
+            <IntroButton href="/cv.pdf" label="CV" icon={<FileText size={16} />} />
+          </div>
+        </section>
+
+        <section id="about" ref={sectionRefs.about} className="flex flex-col flex-1 space-y-12 min-h-[80vh]">
+          <div className="animate-[fadeBlurIn_0.6s_ease-out_forwards]">
+            <h2 className="text-2xl sm:text-3xl font-bold text-zinc-900 dark:text-zinc-100 tracking-tight mb-6">About Me</h2>
+            <div className="space-y-6 text-base sm:text-lg leading-relaxed opacity-0 animate-[fadeBlurIn_0.6s_ease-out_forwards_100ms]">
+              <p>
+                I'm a 19-year-old developer studying Computer Science at the University of St. Andrews. 
+                I have a long-standing passion for coding, breaking ideas down, and learning by building.
+              </p>
+              <p>
+                Recently, I've been spending my time with <span className="text-zinc-900 dark:text-zinc-100 font-semibold">Java & Spring</span> on the backend, 
+                while exploring <span className="text-zinc-900 dark:text-zinc-100 font-semibold">React & TypeScript</span> on the frontend.
+              </p>
             </div>
           </div>
-        )}
-
-        {activeTab === 'about' && (
-          <div className="flex flex-col flex-1 space-y-12">
-            <div className="animate-[fadeBlurIn_0.6s_ease-out_forwards]">
-              <h2 className="text-2xl sm:text-3xl font-bold text-zinc-900 dark:text-zinc-100 tracking-tight mb-6">About Me</h2>
-              <div className="space-y-6 text-base sm:text-lg leading-relaxed opacity-0 animate-[fadeBlurIn_0.6s_ease-out_forwards_100ms]">
-                <p>
-                  I'm a 19-year-old developer studying Computer Science at the University of St. Andrews. 
-                  I have a long-standing passion for coding, breaking ideas down, and learning by building.
-                </p>
-                <p>
-                  Recently, I've been spending my time with <span className="text-zinc-900 dark:text-zinc-100 font-semibold">Java & Spring</span> on the backend, 
-                  while exploring <span className="text-zinc-900 dark:text-zinc-100 font-semibold">React & TypeScript</span> on the frontend.
-                </p>
-              </div>
-            </div>
-
-            <div className="space-y-5 pt-2 opacity-0 animate-[fadeBlurIn_0.6s_ease-out_forwards_200ms]">
-              <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100 tracking-tight">Currently Studying</h3>
-              <ul className="space-y-3 text-base text-zinc-500 dark:text-zinc-400">
-                <li className="flex gap-3 items-center"><span className="h-1.5 w-1.5 rounded-full bg-zinc-300 dark:bg-zinc-700"></span> Data structures & algorithms</li>
-                <li className="flex gap-3 items-center"><span className="h-1.5 w-1.5 rounded-full bg-zinc-300 dark:bg-zinc-700"></span> Grammars & state machines</li>
-                <li className="flex gap-3 items-center"><span className="h-1.5 w-1.5 rounded-full bg-zinc-300 dark:bg-zinc-700"></span> Client–server architecture & networks</li>
-              </ul>
-            </div>
-
-            <div className="flex flex-wrap gap-8 pt-4 opacity-0 animate-[fadeBlurIn_0.6s_ease-out_forwards_300ms]">
-              <SocialLink href="mailto:me@alexstoneham.co.uk" label="Email" />
-              <SocialLink href="https://github.com/yourusername" label="GitHub" />
-              <SocialLink href="https://linkedin.com/in/yourprofile" label="LinkedIn" />
-            </div>
+          <div className="space-y-5 pt-2 opacity-0 animate-[fadeBlurIn_0.6s_ease-out_forwards_200ms]">
+            <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100 tracking-tight">Currently Studying</h3>
+            <ul className="space-y-3 text-base text-zinc-500 dark:text-zinc-400">
+              <li className="flex gap-3 items-center"><span className="h-1.5 w-1.5 rounded-full bg-zinc-300 dark:bg-zinc-700"></span> Data structures & algorithms</li>
+              <li className="flex gap-3 items-center"><span className="h-1.5 w-1.5 rounded-full bg-zinc-300 dark:bg-zinc-700"></span> Grammars & state machines</li>
+              <li className="flex gap-3 items-center"><span className="h-1.5 w-1.5 rounded-full bg-zinc-300 dark:bg-zinc-700"></span> Client–server architecture & networks</li>
+            </ul>
           </div>
-        )}
-
-        {activeTab === 'projects' && (
-          <div className="flex flex-col flex-1 space-y-10">
-            <h2 className="text-2xl sm:text-3xl font-bold text-zinc-900 dark:text-zinc-100 tracking-tight animate-[fadeBlurIn_0.6s_ease-out_forwards]">Selected Projects</h2>
-            {/* Add group class here for group-hover to work */}
-            <div className="flex flex-col gap-4 group opacity-0 animate-[fadeBlurIn_0.6s_ease-out_forwards_150ms]">
-              <ProjectItem 
-                title="Nonograms Puzzle"
-                description="A fully functional GUI puzzle game featuring checking and solving logic."
-                tags="Java, Swing, JSON"
-                link="#"
-              />
-              <ProjectItem 
-                title="Breakout Game"
-                description="An arcade-style game with multiple levels, power-ups, and a custom progression system."
-                tags="Java, Processing"
-                link="#"
-              />
-              <ProjectItem 
-                title="EAFC 24 Pack Opener"
-                description="Lightweight app to pack cards, build drafts, and play endless minigames."
-                tags="Livecode, SQLite"
-                link="#"
-              />
-              <ProjectItem 
-                title="Siege Clip Hub"
-                description="A centralized archive for organizing gameplay clips spanning several years."
-                tags="HTML, CSS"
-                link="#"
-              />
-            </div>
+          <div className="flex flex-wrap gap-8 pt-4 opacity-0 animate-[fadeBlurIn_0.6s_ease-out_forwards_300ms]">
+            <SocialLink href="mailto:me@alexstoneham.co.uk" label="Email" />
+            <SocialLink href="https://github.com/yourusername" label="GitHub" />
+            <SocialLink href="https://linkedin.com/in/yourprofile" label="LinkedIn" />
           </div>
-        )}
+        </section>
 
-        {activeTab === 'skills' && (
-          <div className="flex flex-col flex-1 space-y-10">
-            <h2 className="text-2xl sm:text-3xl font-bold text-zinc-900 dark:text-zinc-100 tracking-tight animate-[fadeBlurIn_0.6s_ease-out_forwards]">Technical Arsenal</h2>
-            <div className="flex flex-col gap-8 opacity-0 animate-[fadeBlurIn_0.6s_ease-out_forwards_150ms]">
-              <SkillRow category="Languages" skills="Java, TypeScript, JavaScript, Python, Lua" />
-              <SkillRow category="Frontend" skills="React, Tailwind CSS, HTML, CSS, Swing" />
-              <SkillRow category="Backend" skills="Spring Boot, Node.js" />
-              <SkillRow category="Databases" skills="PostgreSQL, MySQL, MongoDB, SQLite" />
-            </div>
+        <section id="projects" ref={sectionRefs.projects} className="flex flex-col flex-1 space-y-10 min-h-[80vh]">
+          <h2 className="text-2xl sm:text-3xl font-bold text-zinc-900 dark:text-zinc-100 tracking-tight animate-[fadeBlurIn_0.6s_ease-out_forwards]">Selected Projects</h2>
+          <div className="flex flex-col gap-4 group opacity-0 animate-[fadeBlurIn_0.6s_ease-out_forwards_150ms]">
+            <ProjectItem 
+              title="Nonograms Puzzle"
+              description="A fully functional GUI puzzle game featuring checking and solving logic."
+              tags="Java, Swing, JSON"
+              link="#"
+            />
+            <ProjectItem 
+              title="Breakout Game"
+              description="An arcade-style game with multiple levels, power-ups, and a custom progression system."
+              tags="Java, Processing"
+              link="#"
+            />
+            <ProjectItem 
+              title="EAFC 24 Pack Opener"
+              description="Lightweight app to pack cards, build drafts, and play endless minigames."
+              tags="Livecode, SQLite"
+              link="#"
+            />
+            <ProjectItem 
+              title="Siege Clip Hub"
+              description="A centralized archive for organizing gameplay clips spanning several years."
+              tags="HTML, CSS"
+              link="#"
+            />
           </div>
-        )}
+        </section>
 
+        <section id="skills" ref={sectionRefs.skills} className="flex flex-col flex-1 space-y-10 min-h-[80vh]">
+          <h2 className="text-2xl sm:text-3xl font-bold text-zinc-900 dark:text-zinc-100 tracking-tight animate-[fadeBlurIn_0.6s_ease-out_forwards]">Technical Arsenal</h2>
+          <div className="flex flex-col gap-8 opacity-0 animate-[fadeBlurIn_0.6s_ease-out_forwards_150ms]">
+            <SkillRow category="Languages" skills="Java, TypeScript, JavaScript, Python, Lua" />
+            <SkillRow category="Frontend" skills="React, Tailwind CSS, HTML, CSS, Swing" />
+            <SkillRow category="Backend" skills="Spring Boot, Node.js" />
+            <SkillRow category="Databases" skills="PostgreSQL, MySQL, MongoDB, SQLite" />
+          </div>
+        </section>
       </main>
 
       {/* Floating Bottom Navbar */}
@@ -223,7 +252,7 @@ const App = () => {
               <button
                 key={tab.id}
                 ref={el => tabRefs.current[idx] = el}
-                onClick={() => setActiveTab(tab.id)}
+                onClick={() => handleNavClick(tab.id)}
                 className={`
                   relative px-5 py-2.5 rounded-full text-sm font-semibold 
                   transition-all duration-200 outline-none cursor-pointer
