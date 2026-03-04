@@ -57,9 +57,6 @@ export const Navbar = ({ activeTab, navBarRef, tabRefs, bubbleStyle, isDark, han
                 ${isActive ? 'font-extrabold scale-105' : ''}
                 group-hover:-translate-y-1 group-hover:scale-110
               `}
-              style={{
-                transitionProperty: 'color,transform',
-              }}
             >
               {tab.label}
             </span>
