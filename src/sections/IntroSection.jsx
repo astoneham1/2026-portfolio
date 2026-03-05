@@ -26,7 +26,7 @@ export const IntroSection = ({ sectionRefs }) => (
         <div className="mt-10 flex flex-wrap gap-4 opacity-0 animate-[fadeBlurIn_0.8s_ease-out_forwards_300ms]">
           <IntroButton href="https://linkedin.com/in/alexstoneham" label="LinkedIn" icon={<Linkedin size={16} />} />
           <IntroButton href="https://github.com/astoneham1" label="GitHub" icon={<Github size={16} />} />
-          <IntroButton href="/Alex_Stoneham_CV.pdf" label="CV" icon={<FileText size={16} />} />
+          <IntroButton href="/cv.pdf" label="CV" icon={<FileText size={16} />} />
         </div>
       </div>
     </div>
