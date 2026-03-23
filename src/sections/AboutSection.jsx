@@ -2,7 +2,7 @@ import { SocialLink } from '../components/SocialLink';
 import { SkillRow } from '../components/SkillRow';
 
 export const AboutSection = ({ sectionRefs }) => (
-  <section id="about" ref={sectionRefs.about} className="flex flex-col flex-1 space-y-12 min-h-[80vh]">
+  <section id="about" ref={sectionRefs.about} className="flex flex-col justify-center flex-1 space-y-12 min-h-[80vh] scroll-mt-32">
     <div className="animate-[fadeBlurIn_0.6s_ease-out_forwards]">
       <h2 className="text-2xl sm:text-3xl font-bold text-zinc-900 dark:text-zinc-100 tracking-tight mb-6">About Me</h2>
       <div className="space-y-6 text-base sm:text-lg leading-relaxed opacity-0 animate-[fadeBlurIn_0.6s_ease-out_forwards_100ms]">
