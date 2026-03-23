@@ -5,8 +5,8 @@ export const IntroSection = ({ sectionRefs }) => (
   <section id="intro" ref={sectionRefs.intro} className="flex flex-col justify-center flex-1 min-h-[80vh] max-w-4xl mx-auto w-full -mt-12">
     <div className="flex flex-col lg:flex-row lg:items-center gap-8 lg:gap-12">
       {/* Profile Image */}
-      <div className="flex-shrink-0 opacity-0 animate-[fadeBlurIn_0.8s_ease-out_forwards]">
-        <div className="w-48 h-48 sm:w-64 sm:h-64 rounded-full bg-gradient-to-br from-zinc-200 to-zinc-300 dark:from-zinc-700 dark:to-zinc-800 flex items-center justify-center overflow-hidden border-2 border-zinc-300 dark:border-zinc-700 shadow-lg">
+      <div className="shrink-0 opacity-0 animate-[fadeBlurIn_0.8s_ease-out_forwards]">
+        <div className="w-48 h-48 sm:w-64 sm:h-64 rounded-full bg-linear-to-br from-zinc-200 to-zinc-300 dark:from-zinc-700 dark:to-zinc-800 flex items-center justify-center overflow-hidden border-2 border-zinc-300 dark:border-zinc-700 shadow-lg">
           <img 
             src="/IMG_3915.jpeg" 
             alt="Alexander Stoneham" 
