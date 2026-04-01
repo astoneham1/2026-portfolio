@@ -1,7 +1,7 @@
 import { TABS } from '../constants/tabs';
 
 export const Navbar = ({ activeTab, navBarRef, tabRefs, bubbleStyle, isDark, handleNavClick }) => (
-  <nav className="fixed bottom-8 inset-x-0 z-[100] pointer-events-none flex justify-center px-2 sm:px-6">
+  <nav className="fixed bottom-8 inset-x-0 z-100 pointer-events-none flex justify-center px-2 sm:px-6">
     <div
       ref={navBarRef}
       className="flex items-center gap-1 sm:gap-2 p-1.5 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl backdrop-saturate-150 border border-zinc-200/50 dark:border-zinc-800/50 rounded-full shadow-2xl pointer-events-auto select-none overflow-hidden relative"
@@ -59,7 +59,7 @@ export const Navbar = ({ activeTab, navBarRef, tabRefs, bubbleStyle, isDark, han
             </span>
             <span
               className={`
-                absolute left-1/2 -translate-x-1/2 bottom-0.5 sm:bottom-1 h-[3px] sm:h-1 w-4 sm:w-6 rounded-full
+                absolute left-1/2 -translate-x-1/2 bottom-0.5 sm:bottom-1 h-0.75 sm:h-1 w-4 sm:w-6 rounded-full
                 bg-zinc-900 dark:bg-white transition-all duration-300
                 ${isActive ? 'opacity-80 scale-x-100' : 'opacity-0 scale-x-50'}
               `}

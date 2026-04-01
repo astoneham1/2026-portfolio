@@ -5,7 +5,7 @@ export const ProjectItem = ({ title, description, tags, link, index }) => (
     href={link}
     target="_blank"
     rel="noopener noreferrer"
-    className="flex flex-col gap-4 w-full h-full transition-all duration-300 group-hover:opacity-50 hover:opacity-100 p-5 rounded-2xl hover:bg-zinc-50 dark:hover:bg-zinc-900/40 border border-transparent hover:border-zinc-200/50 dark:hover:border-zinc-800/50 opacity-0 animate-[slideInUp_0.6s_ease-out_forwards] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400 dark:focus-visible:ring-zinc-600 rounded-sm cursor-pointer"
+    className="flex flex-col gap-4 w-full h-full transition-all duration-300 group-hover:opacity-50 hover:opacity-100 p-5 rounded-2xl hover:bg-zinc-50 dark:hover:bg-zinc-900/40 border border-transparent hover:border-zinc-200/50 dark:hover:border-zinc-800/50 opacity-0 animate-[slideInUp_0.6s_ease-out_forwards] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400 dark:focus-visible:ring-zinc-600 cursor-pointer"
     style={{ animationDelay: `${index * 100}ms` }}
   >
     <div className="flex-1 space-y-2">
@@ -17,7 +17,6 @@ export const ProjectItem = ({ title, description, tags, link, index }) => (
         {description}
       </p>
     </div>
-    {/* mt-auto pushes the tags to the bottom of the card */}
     <div className="text-xs font-mono font-medium text-zinc-400 dark:text-zinc-500 mt-auto">
       {tags}
     </div>
