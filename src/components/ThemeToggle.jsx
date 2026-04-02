@@ -1,4 +1,4 @@
-import { Sun, Moon, Monitor } from 'lucide-react';
+import { Sun, Moon } from 'lucide-react';
 
 export const ThemeToggle = ({ theme, cycleTheme }) => (
   <button
@@ -7,7 +7,6 @@ export const ThemeToggle = ({ theme, cycleTheme }) => (
     aria-label="Toggle theme"
     title={`Theme: ${theme}`}
   >
-    {theme === 'system' && <Monitor size={18} className="animate-in fade-in zoom-in duration-300" />}
     {theme === 'light' && <Sun size={18} className="animate-in fade-in zoom-in duration-300" />}
     {theme === 'dark' && <Moon size={18} className="animate-in fade-in zoom-in duration-300" />}
   </button>

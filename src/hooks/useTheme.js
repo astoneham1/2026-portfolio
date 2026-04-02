@@ -1,34 +1,26 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
+
+const getInitialTheme = () => {
+  if (typeof window === 'undefined') return 'light';
+  const saved = localStorage.getItem('theme');
+  if (saved === 'light' || saved === 'dark') return saved;
+  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+};
 
 export const useTheme = () => {
-  const [theme, setTheme] = useState('system');
-  const [systemDark, setSystemDark] = useState(false);
+  const [theme, setTheme] = useState(getInitialTheme);
+  const isDark = theme === 'dark';
 
   useEffect(() => {
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    setSystemDark(mediaQuery.matches);
-
-    const listener = (e) => setSystemDark(e.matches);
-    mediaQuery.addEventListener('change', listener);
-    return () => mediaQuery.removeEventListener('change', listener);
-  }, []);
-
-  const isDark = theme === 'dark' || (theme === 'system' && systemDark);
-
-  useEffect(() => {
-    const root = document.documentElement;
-    if (isDark) {
-      root.classList.add('dark');
+    localStorage.setItem('theme', theme);
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
     } else {
-      root.classList.remove('dark');
+      document.documentElement.classList.remove('dark');
     }
-  }, [isDark]);
+  }, [theme]);
 
-  const cycleTheme = () => {
-    if (theme === 'system') setTheme('light');
-    else if (theme === 'light') setTheme('dark');
-    else setTheme('system');
-  };
+  const cycleTheme = () => setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
 
   return { theme, isDark, cycleTheme };
 };
