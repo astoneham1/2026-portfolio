@@ -21,10 +21,10 @@ export const ProjectsSection = ({ sectionRefs }) => (
         index={1}
       />
       <ProjectItem 
-        title="Scottish Prem Tracker"
-        description="Take a look at your favourite Scottish Premiership teams' recent form, games in years gone by, and how they compare to the rest of the league with this live site."
-        tags="Javascript, API"
-        link="https://spfl.alexstoneham.co.uk"
+        title="SkiteScore - Scottish Prem Tracker"
+        description="The best place for Scottish Premiership stats. Track players, clubs, matches - past and present."
+        tags="React, Tailwind CSS, API"
+        link="https://www.skitescore.com"
         index={2}
       />
       <ProjectItem 
