@@ -7,11 +7,11 @@ export const AboutSection = ({ sectionRefs }) => (
       <h2 className="text-2xl sm:text-3xl font-bold text-zinc-900 dark:text-zinc-100 tracking-tight mb-6">About Me</h2>
       <div className="space-y-6 text-base sm:text-lg leading-relaxed opacity-0 animate-[fadeBlurIn_0.6s_ease-out_forwards_100ms]">
         <p>
-          I'm a 19-year-old developer studying Computer Science at the University of St. Andrews. 
+          I'm a 19-year-old developer entering my third year studying Computer Science at the University of St. Andrews. 
           I have a long-standing passion for coding, breaking ideas down, and learning by building.
         </p>
         <p>
-          Recently, I've been spending my time with <span className="text-zinc-900 dark:text-zinc-100 font-semibold">Java</span> on the backend, 
+          Recently, I've been spending my time with <span className="text-zinc-900 dark:text-zinc-100 font-semibold">C</span> on the backend, 
           and exploring <span className="text-zinc-900 dark:text-zinc-100 font-semibold">React & Tailwind CSS</span> on the frontend.
         </p>
       </div>
@@ -28,7 +28,7 @@ export const AboutSection = ({ sectionRefs }) => (
     <div className="space-y-5 pt-2 opacity-0 animate-[fadeBlurIn_0.6s_ease-out_forwards_300ms]">
       <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100 tracking-tight">Tech Stack</h3>
       <div className="flex flex-col gap-6">
-        <SkillRow category="Languages" skills="Java, TypeScript, JavaScript, Python" />
+        <SkillRow category="Languages" skills="C, Java, JavaScript, Haskell, Python" />
         <SkillRow category="Frontend" skills="React, Tailwind CSS, HTML, CSS, Swing" />
         <SkillRow category="Backend" skills="Spring Boot, Node.js" />
         <SkillRow category="Tools" skills="Git, Linux, Bash, SQLite" />

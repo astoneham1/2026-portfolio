@@ -7,10 +7,10 @@ export const ProjectsSection = ({ sectionRefs }) => (
     
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 group opacity-0 animate-[fadeBlurIn_0.6s_ease-out_forwards_150ms]">
       <ProjectItem 
-        title="EAFC24 Higher or Lower"
-        description="A higher or lower game using the stats of gold cards in EA's FC24. Save your score and compete with your friends to top the leaderboard."
-        tags="Livecode, SQLite"
-        link="https://github.com/astoneham1/higherlower/releases/latest"
+        title="SkiteScore - Scottish Prem Tracker"
+        description="The best place for Scottish Premiership stats. Track players, clubs, matches - past and present."
+        tags="React, Tailwind CSS, API"
+        link="https://www.skitescore.com"
         index={0}
       />
       <ProjectItem 
@@ -21,10 +21,10 @@ export const ProjectsSection = ({ sectionRefs }) => (
         index={1}
       />
       <ProjectItem 
-        title="SkiteScore - Scottish Prem Tracker"
-        description="The best place for Scottish Premiership stats. Track players, clubs, matches - past and present."
-        tags="React, Tailwind CSS, API"
-        link="https://www.skitescore.com"
+        title="EAFC24 Higher or Lower"
+        description="A higher or lower game using the stats of gold cards in EA's FC24. Save your score and compete with your friends to top the leaderboard."
+        tags="Livecode, SQLite"
+        link="https://github.com/astoneham1/higherlower/releases/latest"
         index={2}
       />
       <ProjectItem 
