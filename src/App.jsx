@@ -18,7 +18,7 @@ const App = () => {
     contact: useRef(null),
   };
 
-  const { activeTab, tabRefs, navBarRef, bubbleStyle, handleNavClick } = useScrollNavigation(sectionRefs);
+  const { activeTab, tabRefs, navBarRef, bubbleStyle, handleNavClick, onPointerDown, isDragging } = useScrollNavigation(sectionRefs);
 
   return (
     <div className="min-h-screen bg-white dark:bg-[#09090b] text-zinc-600 dark:text-zinc-400 font-sans selection:bg-zinc-900 selection:text-white dark:selection:bg-white dark:selection:text-zinc-900 transition-colors duration-300 flex flex-col relative overflow-hidden">
@@ -41,6 +41,8 @@ const App = () => {
         bubbleStyle={bubbleStyle}
         isDark={isDark}
         handleNavClick={handleNavClick}
+        onPointerDown={onPointerDown}
+        isDragging={isDragging}
       />
 
       <style dangerouslySetInnerHTML={{__html: `

@@ -1,13 +1,14 @@
 import { TABS } from '../constants/tabs';
 
-export const Navbar = ({ activeTab, navBarRef, tabRefs, bubbleStyle, isDark, handleNavClick }) => (
+export const Navbar = ({ activeTab, navBarRef, tabRefs, bubbleStyle, isDark, handleNavClick, onPointerDown, isDragging }) => (
   <nav className="fixed bottom-8 inset-x-0 z-100 pointer-events-none flex justify-center px-2 sm:px-6">
     <div
       ref={navBarRef}
-      className="flex items-center gap-1 sm:gap-2 p-1.5 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl backdrop-saturate-150 border border-zinc-200/50 dark:border-zinc-800/50 rounded-full shadow-2xl pointer-events-auto select-none overflow-hidden relative"
+      onPointerDown={onPointerDown}
+      className={`flex items-center gap-1 sm:gap-2 p-1.5 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl backdrop-saturate-150 border border-zinc-200/50 dark:border-zinc-800/50 rounded-full shadow-2xl pointer-events-auto select-none overflow-hidden relative touch-none ${isDragging ? 'cursor-grabbing' : 'cursor-grab'}`}
     >
       <div
-        className="absolute top-0 h-full z-0 transition-all duration-500"
+        className="absolute top-0 h-full z-0"
         style={{
           left: bubbleStyle.left,
           width: bubbleStyle.width,
@@ -24,7 +25,9 @@ export const Navbar = ({ activeTab, navBarRef, tabRefs, bubbleStyle, isDark, han
             ? '0 6px 32px 0 rgba(0,0,0,0.22), 0 0 0 2px rgba(255,255,255,0.12)'
             : '0 6px 32px 0 rgba(0,0,0,0.10), 0 0 0 2px rgba(180,180,255,0.10)',
           opacity: 0.98,
-          transition: 'left 0.5s cubic-bezier(.4,1,.7,1.2), width 0.5s cubic-bezier(.4,1,.7,1.2), background 0.3s',
+          transition: isDragging 
+            ? 'none'
+            : 'left 0.5s cubic-bezier(.4,1,.7,1.2), width 0.5s cubic-bezier(.4,1,.7,1.2), background 0.3s',
           pointerEvents: 'none',
         }}
       />
