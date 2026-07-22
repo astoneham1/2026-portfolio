@@ -11,6 +11,8 @@ export const IntroSection = ({ sectionRefs }) => (
             src="/IMG_3915.jpeg" 
             alt="Alexander Stoneham" 
             className="w-full h-full object-cover"
+            fetchPriority="high"
+            decoding="async"
           />
         </div>
       </div>

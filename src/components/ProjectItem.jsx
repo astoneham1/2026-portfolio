@@ -38,11 +38,15 @@ export const ProjectItem = ({ title, description, tags, link, banner, bannerLigh
                 src={lightSrc} 
                 alt={title} 
                 className="block dark:hidden w-full h-full object-cover transition-transform duration-500 ease-out group-hover/card:scale-105"
+                loading="lazy"
+                decoding="async"
               />
               <img 
                 src={darkSrc} 
                 alt={title} 
                 className="hidden dark:block w-full h-full object-cover transition-transform duration-500 ease-out group-hover/card:scale-105"
+                loading="lazy"
+                decoding="async"
               />
             </>
           ) : (
@@ -50,6 +54,8 @@ export const ProjectItem = ({ title, description, tags, link, banner, bannerLigh
               src={lightSrc || darkSrc} 
               alt={title} 
               className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover/card:scale-105"
+              loading="lazy"
+              decoding="async"
             />
           )}
         </div>
