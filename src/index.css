@@ -1,4 +1,9 @@
 @import "tailwindcss";
 
-/* This line makes the manual dark mode toggle work in v4 */
+/* Global smooth scrolling fallback */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Manual dark mode toggle variant for Tailwind v4 */
 @custom-variant dark (&:is(.dark *));
