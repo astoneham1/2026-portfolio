@@ -10,6 +10,7 @@ export const useScrollNavigation = (sectionRefs) => {
   useEffect(() => {
     const handleScroll = () => {
       const scrollY = window.scrollY;
+      const targetY = scrollY + 180; // Header top threshold
 
       const offsets = Object.entries(sectionRefs).map(([id, ref]) => {
         if (!ref.current) return { id, offset: Infinity };
@@ -19,9 +20,9 @@ export const useScrollNavigation = (sectionRefs) => {
       });
 
       const active = offsets.reduce((closest, current) => {
-        const closestDist = closest.offset - scrollY;
-        const currentDist = current.offset - scrollY;
-        return Math.abs(currentDist) < Math.abs(closestDist) ? current : closest;
+        const currentDist = Math.abs(current.offset - targetY);
+        const closestDist = Math.abs(closest.offset - targetY);
+        return currentDist < closestDist ? current : closest;
       });
 
       setActiveTab(active.id);
@@ -53,7 +54,7 @@ export const useScrollNavigation = (sectionRefs) => {
     } else {
       const ref = sectionRefs[id];
       if (ref && ref.current) {
-        ref.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        ref.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
     }
   };

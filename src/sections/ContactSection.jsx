@@ -1,7 +1,7 @@
 import { Mail, Linkedin, Github, ArrowUpRight, MapPin } from 'lucide-react';
 
 export const ContactSection = ({ sectionRefs }) => (
-  <section id="contact" ref={sectionRefs.contact} className="flex flex-col justify-center flex-1 space-y-8 min-h-[60vh]">
+  <section id="contact" ref={sectionRefs.contact} className="flex flex-col flex-1 space-y-8 min-h-[60vh] scroll-mt-20">
     <div className="animate-[fadeBlurIn_0.6s_ease-out_forwards]">
       <h2 className="text-2xl sm:text-3xl font-bold text-zinc-900 dark:text-zinc-100 tracking-tight mb-4">Let's Connect</h2>
       <p className="text-base sm:text-lg text-zinc-500 dark:text-zinc-400 leading-relaxed opacity-0 animate-[fadeBlurIn_0.6s_ease-out_forwards_100ms]">
@@ -44,3 +44,5 @@ export const ContactSection = ({ sectionRefs }) => (
     </div>
   </section>
 );
+
+

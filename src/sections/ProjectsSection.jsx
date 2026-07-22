@@ -2,7 +2,7 @@ import { ProjectItem } from '../components/ProjectItem';
 import { ArrowUpRight } from 'lucide-react';
 
 export const ProjectsSection = ({ sectionRefs }) => (
-  <section id="projects" ref={sectionRefs.projects} className="flex flex-col flex-1 space-y-10 min-h-[80vh]">
+  <section id="projects" ref={sectionRefs.projects} className="flex flex-col flex-1 space-y-10 min-h-[70vh] scroll-mt-20">
     <h2 className="text-2xl sm:text-3xl font-bold text-zinc-900 dark:text-zinc-100 tracking-tight animate-[fadeBlurIn_0.6s_ease-out_forwards]">Selected Projects</h2>
     
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 group opacity-0 animate-[fadeBlurIn_0.6s_ease-out_forwards_150ms]">
