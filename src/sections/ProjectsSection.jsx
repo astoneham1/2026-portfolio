@@ -11,6 +11,10 @@ export const ProjectsSection = ({ sectionRefs }) => (
         description="The best place for Scottish Premiership stats. Track players, clubs, matches - past and present."
         tags="React, Tailwind CSS, API"
         link="https://www.skitescore.com"
+        banner={{
+          light: '/projects/skitescore-light.png',
+          dark: '/projects/skitescore-dark.png',
+        }}
         index={0}
       />
       <ProjectItem 
@@ -18,6 +22,7 @@ export const ProjectsSection = ({ sectionRefs }) => (
         description="If you're a mega fan of Prison Break, this character guessing with over 100 characters from all 5 seasons is perfect for you!"
         tags="HTML, CSS, JavaScript"
         link="https://breakle.alexstoneham.co.uk"
+        banner="/projects/breakle.png"
         index={1}
       />
       <ProjectItem 
@@ -25,6 +30,7 @@ export const ProjectsSection = ({ sectionRefs }) => (
         description="A higher or lower game using the stats of gold cards in EA's FC24. Save your score and compete with your friends to top the leaderboard."
         tags="Livecode, SQLite"
         link="https://github.com/astoneham1/higherlower/releases/latest"
+        banner="/projects/higherlower.png"
         index={2}
       />
       <ProjectItem 
@@ -32,6 +38,7 @@ export const ProjectsSection = ({ sectionRefs }) => (
         description="Think you know movies? Test your knowledge with this interactive quiz game that uses not so helpful descriptions."
         tags="HTML, CSS, JavaScript"
         link="https://movies.alexstoneham.co.uk"
+        banner="/projects/guessthemovie.png"
         index={3}
       />
     </div>
