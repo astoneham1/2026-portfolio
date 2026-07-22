@@ -38,6 +38,8 @@ export const Navbar = ({ activeTab, navBarRef, tabRefs, bubbleStyle, isDark, han
             key={tab.id}
             ref={el => tabRefs.current[idx] = el}
             onClick={() => handleNavClick(tab.id)}
+            aria-label={`Navigate to ${tab.label} section`}
+            aria-current={isActive ? 'page' : undefined}
             className={`
               relative px-3 sm:px-5 py-2 sm:py-2.5 rounded-full text-[11px] sm:text-sm font-semibold 
               transition-all duration-200 outline-none cursor-pointer
