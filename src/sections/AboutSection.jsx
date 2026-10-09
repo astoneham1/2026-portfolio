@@ -20,9 +20,9 @@ export const AboutSection = ({ sectionRefs }) => (
       <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100 tracking-tight">Currently Studying</h3>
       <ul className="space-y-3 text-base text-zinc-500 dark:text-zinc-400">
         <li className="flex gap-3 items-center"><span className="h-1.5 w-1.5 rounded-full bg-zinc-300 dark:bg-zinc-700"></span> Systems programming with C</li>
-        <li className="flex gap-3 items-center"><span className="h-1.5 w-1.5 rounded-full bg-zinc-300 dark:bg-zinc-700"></span> Functional programming in Haskell</li>
-        <li className="flex gap-3 items-center"><span className="h-1.5 w-1.5 rounded-full bg-zinc-300 dark:bg-zinc-700"></span> Logic and computer architecture</li>
-        <li className="flex gap-3 items-center"><span className="h-1.5 w-1.5 rounded-full bg-zinc-300 dark:bg-zinc-700"></span> Improving my skills in Python</li>
+        <li className="flex gap-3 items-center"><span className="h-1.5 w-1.5 rounded-full bg-zinc-300 dark:bg-zinc-700"></span> Logic, proof and automated reasoning</li>
+        <li className="flex gap-3 items-center"><span className="h-1.5 w-1.5 rounded-full bg-zinc-300 dark:bg-zinc-700"></span> Operating systems: processes, scheduling and memory</li>
+        <li className="flex gap-3 items-center"><span className="h-1.5 w-1.5 rounded-full bg-zinc-300 dark:bg-zinc-700"></span> Search, heuristics and machine learning in AI</li>
       </ul>
     </div>
     <div className="space-y-5 pt-2 opacity-0 animate-[fadeBlurIn_0.6s_ease-out_forwards_300ms]">
