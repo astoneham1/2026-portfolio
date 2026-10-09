@@ -1,8 +1,8 @@
 import { Linkedin, Github, FileText } from 'lucide-react';
 import { IntroButton } from '../components/IntroButton';
 
-export const IntroSection = ({ sectionRefs }) => (
-  <section id="intro" ref={sectionRefs.intro} className="flex flex-col justify-center flex-1 min-h-[80vh] max-w-4xl mx-auto w-full -mt-12">
+export const IntroSection = ({ sectionRef }) => (
+  <section id="intro" ref={sectionRef} className="flex flex-col justify-center flex-1 min-h-[80vh] max-w-4xl mx-auto w-full -mt-12">
     <div className="flex flex-col lg:flex-row lg:items-center gap-8 lg:gap-12">
       {/* Profile Image */}
       <div className="shrink-0 opacity-0 animate-[fadeBlurIn_0.8s_ease-out_forwards]">

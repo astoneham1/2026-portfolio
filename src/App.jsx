@@ -29,10 +29,10 @@ const App = () => {
       <ThemeToggle theme={theme} cycleTheme={cycleTheme} />
 
       <main className="flex-1 max-w-2xl mx-auto w-full px-6 pt-24 pb-32 flex flex-col relative z-10 space-y-32">
-        <IntroSection sectionRefs={sectionRefs} />
-        <AboutSection sectionRefs={sectionRefs} />
-        <ProjectsSection sectionRefs={sectionRefs} />
-        <ContactSection sectionRefs={sectionRefs} />
+        <IntroSection sectionRef={sectionRefs.intro} />
+        <AboutSection sectionRef={sectionRefs.about} />
+        <ProjectsSection sectionRef={sectionRefs.projects} />
+        <ContactSection sectionRef={sectionRefs.contact} />
       </main>
 
       <Navbar 
