@@ -7,7 +7,7 @@ export const AboutSection = ({ sectionRefs }) => (
       <h2 className="text-2xl sm:text-3xl font-bold text-zinc-900 dark:text-zinc-100 tracking-tight mb-6">About Me</h2>
       <div className="space-y-6 text-base sm:text-lg leading-relaxed opacity-0 animate-[fadeBlurIn_0.6s_ease-out_forwards_100ms]">
         <p>
-          I'm a 19-year-old developer entering my third year studying Computer Science at the University of St. Andrews. 
+          I'm a 19-year-old developer in my third year studying Computer Science at the University of St. Andrews. 
           I have a long-standing passion for coding, breaking ideas down, and learning by building.
         </p>
         <p>
