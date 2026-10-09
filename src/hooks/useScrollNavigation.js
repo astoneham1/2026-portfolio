@@ -1,8 +1,13 @@
 import { useEffect, useState, useRef, useCallback } from 'react';
 import { TABS } from '../constants/tabs';
 
+const getHashTab = () => {
+  const id = window.location.hash.slice(1);
+  return TABS.some(tab => tab.id === id) ? id : null;
+};
+
 export const useScrollNavigation = (sectionRefs) => {
-  const [activeTab, setActiveTab] = useState('intro');
+  const [activeTab, setActiveTab] = useState(() => getHashTab() ?? 'intro');
   const [isDragging, setIsDragging] = useState(false);
 
   const tabRefs = useRef([]);
@@ -53,6 +58,36 @@ export const useScrollNavigation = (sectionRefs) => {
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, [sectionRefs, isDragging]);
+
+  // Reflect the active section in the URL hash (replaceState keeps history clean)
+  useEffect(() => {
+    if (isDragging) return;
+    const hash = activeTab === 'intro' ? '' : `#${activeTab}`;
+    if (window.location.hash === hash) return;
+    try {
+      window.history.replaceState(null, '', window.location.pathname + window.location.search + hash);
+    } catch {
+      // replaceState can be rate limited (Safari); the URL is a nicety, so ignore
+    }
+  }, [activeTab, isDragging]);
+
+  // Jump to the linked section on first load, and follow manual hash edits
+  useEffect(() => {
+    const scrollToHash = (behavior) => {
+      const id = getHashTab();
+      if (!id || id === 'intro') return;
+      sectionRefs[id]?.current?.scrollIntoView({ behavior, block: 'start' });
+    };
+
+    // On Back/Forward the browser restores the exact scroll position; don't override it
+    const navType = performance.getEntriesByType('navigation')[0]?.type;
+    if (navType !== 'back_forward') scrollToHash('instant');
+    const onHashChange = () => scrollToHash('smooth');
+    window.addEventListener('hashchange', onHashChange);
+    return () => window.removeEventListener('hashchange', onHashChange);
+    // sectionRefs holds stable ref objects; run once on mount
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Update bubble position when activeTab changes (when not dragging)
   useEffect(() => {
