@@ -15,7 +15,8 @@ const getHashTab = () => {
 };
 
 export const useScrollNavigation = (sectionRefs) => {
-  const [activeTab, setActiveTab] = useState(() => getHashTab() ?? 'intro');
+  // Always starts on 'intro' so it matches the prerendered HTML; the hash/scroll effects below move it
+  const [activeTab, setActiveTab] = useState('intro');
   const [isDragging, setIsDragging] = useState(false);
 
   const navBarRef = useRef(null);
