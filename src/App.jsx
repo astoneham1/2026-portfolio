@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { createRef, useState } from 'react';
 import { useTheme } from './hooks/useTheme';
 import { useScrollNavigation } from './hooks/useScrollNavigation';
 import { ThemeToggle } from './components/ThemeToggle';
@@ -9,16 +9,17 @@ import { ProjectsSection } from './sections/ProjectsSection';
 import { ContactSection } from './sections/ContactSection';
 
 const App = () => {
-  const { theme, isDark, cycleTheme } = useTheme();
+  const { theme, cycleTheme } = useTheme();
 
-  const sectionRefs = {
-    intro: useRef(null),
-    about: useRef(null),
-    projects: useRef(null),
-    contact: useRef(null),
-  };
+  // Created once so the object identity is stable for hooks that depend on it
+  const [sectionRefs] = useState(() => ({
+    intro: createRef(),
+    about: createRef(),
+    projects: createRef(),
+    contact: createRef(),
+  }));
 
-  const { activeTab, tabRefs, navBarRef, bubbleStyle, handleNavClick, onPointerDown, isDragging } = useScrollNavigation(sectionRefs);
+  const { activeTab, isDragging, navBarRef, bubbleRef, tabRefs, handleNavClick, dragHandlers } = useScrollNavigation(sectionRefs);
 
   return (
     <div className="min-h-screen bg-white dark:bg-[#09090b] text-zinc-600 dark:text-zinc-400 font-sans selection:bg-zinc-900 selection:text-white dark:selection:bg-white dark:selection:text-zinc-900 transition-colors duration-300 flex flex-col relative overflow-hidden">
@@ -36,13 +37,12 @@ const App = () => {
 
       <Navbar 
         activeTab={activeTab}
-        navBarRef={navBarRef}
-        tabRefs={tabRefs}
-        bubbleStyle={bubbleStyle}
-        isDark={isDark}
-        handleNavClick={handleNavClick}
-        onPointerDown={onPointerDown}
         isDragging={isDragging}
+        navBarRef={navBarRef}
+        bubbleRef={bubbleRef}
+        tabRefs={tabRefs}
+        handleNavClick={handleNavClick}
+        dragHandlers={dragHandlers}
       />
 
       <style dangerouslySetInnerHTML={{__html: `

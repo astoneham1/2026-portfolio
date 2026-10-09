@@ -1,5 +1,10 @@
-import { useEffect, useState, useRef, useCallback } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { TABS } from '../constants/tabs';
+
+// A section counts as "current" when its top is closest to this far below the viewport top
+const ACTIVE_LINE_OFFSET = 180;
+// A programmatic scroll is considered finished once no scroll event has fired for this long
+const SETTLE_MS = 200;
 
 const getHashTab = () => {
   const id = window.location.hash.slice(1);
@@ -10,54 +15,110 @@ export const useScrollNavigation = (sectionRefs) => {
   const [activeTab, setActiveTab] = useState(() => getHashTab() ?? 'intro');
   const [isDragging, setIsDragging] = useState(false);
 
-  const tabRefs = useRef([]);
   const navBarRef = useRef(null);
-  const [bubbleStyle, setBubbleStyle] = useState({ left: 0, width: 0 });
+  const bubbleRef = useRef(null);
+  const tabRefs = useRef([]);
 
-  // Get discrete position for a tab ID
-  const getTabStyle = useCallback((tabId) => {
-    if (!tabRefs.current || !navBarRef.current) return null;
-    const idx = TABS.findIndex(tab => tab.id === tabId);
-    const node = tabRefs.current[idx];
-    const navNode = navBarRef.current;
-    if (node && navNode) {
-      const { left: tabLeft, width } = node.getBoundingClientRect();
-      const { left: navLeft } = navNode.getBoundingClientRect();
-      return {
-        left: tabLeft - navLeft,
-        width,
-      };
+  // Mirrors of state for use inside event handlers and observers
+  const activeTabRef = useRef(activeTab);
+  const draggingRef = useRef(false);
+  // True while a click/drag-initiated scroll is in flight, so scroll events don't fight the chosen tab
+  const navigatingRef = useRef(false);
+  const settleTimer = useRef(null);
+
+  // The bubble is positioned straight on the DOM node: no re-render per drag move, no stale measurements
+  const syncBubble = useCallback((animate = true) => {
+    const bubble = bubbleRef.current;
+    const node = tabRefs.current[TABS.findIndex(tab => tab.id === activeTabRef.current)];
+    if (!bubble || !node) return;
+
+    if (!animate) bubble.style.transition = 'none';
+    bubble.style.width = `${node.offsetWidth}px`;
+    bubble.style.transform = `translateX(${node.offsetLeft}px)`;
+    if (!animate) {
+      bubble.offsetWidth; // flush so the jump isn't animated once transitions are restored
+      bubble.style.transition = '';
     }
-    return null;
+
+    // Reveal (and enable transitions) only after the first placement, so it never animates in from 0
+    if (bubble.dataset.ready !== 'true') {
+      requestAnimationFrame(() => { bubble.dataset.ready = 'true'; });
+    }
   }, []);
 
-  // Update active tab on window scroll (only when not dragging)
+  const syncActiveFromScroll = useCallback(() => {
+    const scrollY = window.scrollY;
+    const atBottom = scrollY > 0 && window.innerHeight + scrollY >= document.documentElement.scrollHeight - 2;
+    if (atBottom) {
+      setActiveTab(TABS[TABS.length - 1].id);
+      return;
+    }
+
+    const targetY = scrollY + ACTIVE_LINE_OFFSET;
+    let closestId = TABS[0].id;
+    let closestDist = Infinity;
+    for (const { id } of TABS) {
+      const node = sectionRefs[id]?.current;
+      if (!node) continue;
+      const dist = Math.abs(node.getBoundingClientRect().top + scrollY - targetY);
+      if (dist < closestDist) {
+        closestDist = dist;
+        closestId = id;
+      }
+    }
+    setActiveTab(closestId);
+  }, [sectionRefs]);
+
+  // (Re)start the "scroll has stopped" countdown; when it fires, hand control back to scroll tracking
+  const armSettle = useCallback(() => {
+    clearTimeout(settleTimer.current);
+    settleTimer.current = setTimeout(() => {
+      navigatingRef.current = false;
+      syncActiveFromScroll();
+    }, SETTLE_MS);
+  }, [syncActiveFromScroll]);
+
+  useEffect(() => () => clearTimeout(settleTimer.current), []);
+
+  // Track the section in view while the user scrolls
   useEffect(() => {
-    if (isDragging) return;
-
-    const handleScroll = () => {
-      const scrollY = window.scrollY;
-      const targetY = scrollY + 180;
-
-      const offsets = Object.entries(sectionRefs).map(([id, ref]) => {
-        if (!ref.current) return { id, offset: Infinity };
-        const rect = ref.current.getBoundingClientRect();
-        const offset = rect.top + scrollY;
-        return { id, offset };
+    let frame = 0;
+    const onScroll = () => {
+      if (navigatingRef.current) {
+        armSettle();
+        return;
+      }
+      if (frame) return;
+      frame = requestAnimationFrame(() => {
+        frame = 0;
+        syncActiveFromScroll();
       });
-
-      const active = offsets.reduce((closest, current) => {
-        const currentDist = Math.abs(current.offset - targetY);
-        const closestDist = Math.abs(closest.offset - targetY);
-        return currentDist < closestDist ? current : closest;
-      });
-
-      setActiveTab(active.id);
     };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      cancelAnimationFrame(frame);
+    };
+  }, [armSettle, syncActiveFromScroll]);
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [sectionRefs, isDragging]);
+  // Keep the bubble on the active tab (unless the pointer is driving it)
+  useEffect(() => {
+    activeTabRef.current = activeTab;
+    if (!isDragging) syncBubble();
+  }, [activeTab, isDragging, syncBubble]);
+
+  // Re-place the bubble, without animating, when the navbar's size changes (resize, font load)
+  useEffect(() => {
+    const nav = navBarRef.current;
+    if (!nav) return;
+    const resync = () => {
+      if (!draggingRef.current) syncBubble(false);
+    };
+    const observer = new ResizeObserver(resync);
+    observer.observe(nav);
+    document.fonts?.ready.then(resync);
+    return () => observer.disconnect();
+  }, [syncBubble]);
 
   // Reflect the active section in the URL hash (replaceState keeps history clean)
   useEffect(() => {
@@ -85,136 +146,101 @@ export const useScrollNavigation = (sectionRefs) => {
     const onHashChange = () => scrollToHash('smooth');
     window.addEventListener('hashchange', onHashChange);
     return () => window.removeEventListener('hashchange', onHashChange);
-    // sectionRefs holds stable ref objects; run once on mount
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  // Update bubble position when activeTab changes (when not dragging)
-  useEffect(() => {
-    if (isDragging) return;
-    const style = getTabStyle(activeTab);
-    if (style) {
-      setBubbleStyle(style);
-    }
-  }, [activeTab, getTabStyle, isDragging]);
-
-  // Handle window resize
-  useEffect(() => {
-    const handleResize = () => {
-      if (!isDragging) {
-        const style = getTabStyle(activeTab);
-        if (style) setBubbleStyle(style);
-      }
-    };
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, [activeTab, getTabStyle, isDragging]);
-
-  // Continuous fluid interpolation calculation during dragging
-  const updateDragBubble = useCallback((clientX) => {
-    if (!navBarRef.current || !tabRefs.current) return activeTab;
-
-    const navNode = navBarRef.current;
-    const navRect = navNode.getBoundingClientRect();
-    const pointerX = clientX - navRect.left;
-
-    const tabGeometries = TABS.map((tab, idx) => {
-      const node = tabRefs.current[idx];
-      if (!node) return null;
-      const { left: tabLeft, width } = node.getBoundingClientRect();
-      const relLeft = tabLeft - navRect.left;
-      const centerX = relLeft + width / 2;
-      return { id: tab.id, left: relLeft, width, centerX };
-    }).filter(Boolean);
-
-    if (tabGeometries.length === 0) return activeTab;
-
-    let targetLeft = tabGeometries[0].left;
-    let targetWidth = tabGeometries[0].width;
-    let closestTabId = tabGeometries[0].id;
-
-    if (pointerX <= tabGeometries[0].centerX) {
-      targetLeft = tabGeometries[0].left;
-      targetWidth = tabGeometries[0].width;
-      closestTabId = tabGeometries[0].id;
-    } else if (pointerX >= tabGeometries[tabGeometries.length - 1].centerX) {
-      const last = tabGeometries[tabGeometries.length - 1];
-      targetLeft = last.left;
-      targetWidth = last.width;
-      closestTabId = last.id;
-    } else {
-      for (let i = 0; i < tabGeometries.length - 1; i++) {
-        const current = tabGeometries[i];
-        const next = tabGeometries[i + 1];
-
-        if (pointerX >= current.centerX && pointerX <= next.centerX) {
-          const progress = (pointerX - current.centerX) / (next.centerX - current.centerX);
-          targetLeft = current.left + (next.left - current.left) * progress;
-          targetWidth = current.width + (next.width - current.width) * progress;
-          closestTabId = progress < 0.5 ? current.id : next.id;
-          break;
-        }
-      }
-    }
-
-    setBubbleStyle({ left: targetLeft, width: targetWidth });
-    setActiveTab(closestTabId);
-    return closestTabId;
-  }, [activeTab]);
+  }, [sectionRefs]);
 
   const handleNavClick = useCallback((id) => {
+    // Commit to the chosen tab immediately; scroll events are ignored until the scroll settles
+    navigatingRef.current = true;
+    setActiveTab(id);
+    armSettle();
+
     if (id === 'intro') {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
-      const ref = sectionRefs[id];
-      if (ref && ref.current) {
-        ref.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
+      sectionRefs[id]?.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
-  }, [sectionRefs]);
+  }, [sectionRefs, armSettle]);
 
-  const onPointerDown = useCallback((e) => {
-    setIsDragging(true);
-    updateDragBubble(e.clientX);
-  }, [updateDragBubble]);
+  // Slide the bubble to the pointer, interpolating between neighbouring tabs. Returns the nearest tab id.
+  const dragBubbleTo = useCallback((clientX) => {
+    const nav = navBarRef.current;
+    const bubble = bubbleRef.current;
+    if (!nav || !bubble) return activeTabRef.current;
 
-  useEffect(() => {
-    if (!isDragging) return;
+    const pointerX = clientX - nav.getBoundingClientRect().left - nav.clientLeft;
+    const tabs = TABS.map((tab, idx) => {
+      const node = tabRefs.current[idx];
+      return node && {
+        id: tab.id,
+        left: node.offsetLeft,
+        width: node.offsetWidth,
+        center: node.offsetLeft + node.offsetWidth / 2,
+      };
+    }).filter(Boolean);
+    if (tabs.length === 0) return activeTabRef.current;
 
-    let releaseTabId = activeTab;
+    const first = tabs[0];
+    const last = tabs[tabs.length - 1];
+    let left = first.left;
+    let width = first.width;
+    let nearest = first.id;
 
-    const onPointerMove = (e) => {
-      releaseTabId = updateDragBubble(e.clientX);
-    };
+    if (pointerX >= last.center) {
+      ({ left, width } = last);
+      nearest = last.id;
+    } else if (pointerX > first.center) {
+      const i = tabs.findIndex((tab, idx) => idx < tabs.length - 1 && pointerX <= tabs[idx + 1].center);
+      const from = tabs[i];
+      const to = tabs[i + 1];
+      const progress = (pointerX - from.center) / (to.center - from.center);
+      left = from.left + (to.left - from.left) * progress;
+      width = from.width + (to.width - from.width) * progress;
+      nearest = progress < 0.5 ? from.id : to.id;
+    }
 
-    const onPointerUp = (e) => {
-      if (e) {
-        releaseTabId = updateDragBubble(e.clientX);
-      }
-      setIsDragging(false);
-      handleNavClick(releaseTabId);
-    };
+    bubble.style.width = `${width}px`;
+    bubble.style.transform = `translateX(${left}px)`;
+    setActiveTab(nearest);
+    return nearest;
+  }, []);
 
-    window.addEventListener('pointermove', onPointerMove);
-    window.addEventListener('pointerup', onPointerUp);
-    window.addEventListener('pointercancel', onPointerUp);
+  const endDrag = useCallback(() => {
+    draggingRef.current = false;
+    setIsDragging(false);
+  }, []);
 
-    return () => {
-      window.removeEventListener('pointermove', onPointerMove);
-      window.removeEventListener('pointerup', onPointerUp);
-      window.removeEventListener('pointercancel', onPointerUp);
-    };
-  }, [isDragging, updateDragBubble, handleNavClick, activeTab]);
+  // Pointer capture keeps move/up events coming to the navbar even when the pointer leaves it
+  const dragHandlers = {
+    onPointerDown: (e) => {
+      if (e.button !== 0) return;
+      e.currentTarget.setPointerCapture(e.pointerId);
+      draggingRef.current = true;
+      setIsDragging(true);
+      dragBubbleTo(e.clientX);
+    },
+    onPointerMove: (e) => {
+      if (draggingRef.current) dragBubbleTo(e.clientX);
+    },
+    onPointerUp: (e) => {
+      if (!draggingRef.current) return;
+      const id = dragBubbleTo(e.clientX);
+      endDrag();
+      handleNavClick(id);
+    },
+    onPointerCancel: () => {
+      if (!draggingRef.current) return;
+      endDrag();
+      syncActiveFromScroll(); // nothing was chosen, so go back to the section actually in view
+    },
+  };
 
   return {
     activeTab,
-    tabRefs,
-    navBarRef,
-    bubbleStyle,
-    handleNavClick,
-    onPointerDown,
     isDragging,
+    navBarRef,
+    bubbleRef,
+    tabRefs,
+    handleNavClick,
+    dragHandlers,
   };
 };
-
-

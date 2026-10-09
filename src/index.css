@@ -7,3 +7,62 @@ html {
 
 /* Manual dark mode toggle variant for Tailwind v4 */
 @custom-variant dark (&:is(.dark *));
+
+/* Navbar liquid glass: a frosted pill with a clearer, lens-like bubble on top */
+.glass-pill {
+  background: rgb(244 244 247 / 0.55);
+  backdrop-filter: blur(18px) saturate(180%);
+  -webkit-backdrop-filter: blur(18px) saturate(180%);
+  box-shadow:
+    0 0 0 1px rgb(0 0 0 / 0.07),
+    inset 0 1px 1px rgb(255 255 255 / 0.9),
+    inset 0 -1px 1px rgb(0 0 0 / 0.06),
+    0 10px 30px rgb(0 0 0 / 0.14),
+    0 2px 6px rgb(0 0 0 / 0.06);
+}
+
+.glass-bubble {
+  background: linear-gradient(180deg, rgb(255 255 255 / 0.85), rgb(255 255 255 / 0.35));
+  backdrop-filter: blur(2px) saturate(170%) brightness(1.06);
+  -webkit-backdrop-filter: blur(2px) saturate(170%) brightness(1.06);
+  box-shadow:
+    0 0 0 1px rgb(0 0 0 / 0.07),
+    inset 0 1px 1px rgb(255 255 255 / 1),
+    inset 0 -2px 5px rgb(0 0 0 / 0.07),
+    inset 0 0 10px rgb(255 255 255 / 0.5),
+    0 4px 14px rgb(0 0 0 / 0.16);
+}
+
+.dark .glass-pill {
+  background: rgb(24 24 27 / 0.55);
+  box-shadow:
+    0 0 0 1px rgb(255 255 255 / 0.1),
+    inset 0 1px 1px rgb(255 255 255 / 0.22),
+    inset 0 -1px 1px rgb(0 0 0 / 0.4),
+    0 10px 30px rgb(0 0 0 / 0.5),
+    0 2px 6px rgb(0 0 0 / 0.3);
+}
+
+.dark .glass-bubble {
+  background: linear-gradient(180deg, rgb(255 255 255 / 0.26), rgb(255 255 255 / 0.07));
+  backdrop-filter: blur(2px) saturate(170%) brightness(1.25);
+  -webkit-backdrop-filter: blur(2px) saturate(170%) brightness(1.25);
+  box-shadow:
+    0 0 0 1px rgb(255 255 255 / 0.16),
+    inset 0 1px 1px rgb(255 255 255 / 0.45),
+    inset 0 -2px 5px rgb(0 0 0 / 0.25),
+    inset 0 0 10px rgb(255 255 255 / 0.1),
+    0 4px 14px rgb(0 0 0 / 0.4);
+}
+
+/* Chromium only: refract the backdrop through the bubble */
+html[data-glass-refract] .glass-bubble {
+  backdrop-filter: url(#nav-glass-refract) blur(2px) saturate(170%) brightness(1.06);
+}
+html[data-glass-refract].dark .glass-bubble {
+  backdrop-filter: url(#nav-glass-refract) blur(2px) saturate(170%) brightness(1.25);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glass-bubble { transition: none !important; }
+}
