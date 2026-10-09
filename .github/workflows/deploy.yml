@@ -36,5 +36,5 @@ jobs:
         run: >
           npx gh-pages -d dist
           -r "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git"
-          -u "github-actions <41898282+github-actions[bot]@users.noreply.github.com>"
+          -u "github-actions <41898282+github-actions@users.noreply.github.com>"
           -m "Deploy ${{ github.sha }}"
