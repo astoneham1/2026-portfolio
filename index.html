@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en-GB">
   <head>
     <meta charset="utf-8" />
     <link rel="icon" href="/ax_icons/favicon.ico" />
@@ -12,44 +12,83 @@
     <meta name="theme-color" content="#09090b" media="(prefers-color-scheme: dark)" />
     <meta
       name="description"
-      content="Alexander Stoneham — Computer Science student at the University of St. Andrews & Developer."
+      content="Alex Stoneham is a Computer Science student at the University of St Andrews and developer. Browse his projects in React, C and Java, and get in touch."
     />
+    <meta name="author" content="Alexander Stoneham" />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
     <link rel="canonical" href="https://alexstoneham.co.uk/" />
 
     <!-- Open Graph / Facebook / LinkedIn -->
     <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Alex Stoneham" />
+    <meta property="og:locale" content="en_GB" />
     <meta property="og:url" content="https://alexstoneham.co.uk/" />
-    <meta property="og:title" content="Alexander Stoneham — CS Student & Developer" />
-    <meta property="og:description" content="Computer Science student at the University of St. Andrews. Systems programming in C, React, and software engineering." />
+    <meta property="og:title" content="Alex Stoneham — Computer Science Student & Developer" />
+    <meta property="og:description" content="Computer Science student at the University of St Andrews. Systems programming in C, React, and software engineering." />
     <meta property="og:image" content="https://alexstoneham.co.uk/cover.jpeg" />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Alex Stoneham looking out over the city of Porto" />
 
     <!-- Twitter / X -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:url" content="https://alexstoneham.co.uk/" />
-    <meta name="twitter:title" content="Alexander Stoneham — CS Student & Developer" />
-    <meta name="twitter:description" content="Computer Science student at the University of St. Andrews. Systems programming in C, React, and software engineering." />
+    <meta name="twitter:title" content="Alex Stoneham — Computer Science Student & Developer" />
+    <meta name="twitter:description" content="Computer Science student at the University of St Andrews. Systems programming in C, React, and software engineering." />
     <meta name="twitter:image" content="https://alexstoneham.co.uk/cover.jpeg" />
+    <meta name="twitter:image:alt" content="Alex Stoneham looking out over the city of Porto" />
 
-    <!-- Google Person Schema (JSON-LD) -->
+    <!-- Structured data (JSON-LD) -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "Person",
-      "name": "Alexander Stoneham",
-      "url": "https://alexstoneham.co.uk",
-      "sameAs": [
-        "https://github.com/astoneham1",
-        "https://linkedin.com/in/alexstoneham"
-      ],
-      "jobTitle": "Developer & Computer Science Student",
-      "alumniOf": {
-        "@type": "CollegeOrUniversity",
-        "name": "University of St Andrews"
-      }
+      "@graph": [
+        {
+          "@type": "WebSite",
+          "@id": "https://alexstoneham.co.uk/#website",
+          "url": "https://alexstoneham.co.uk/",
+          "name": "Alex Stoneham",
+          "inLanguage": "en-GB",
+          "publisher": { "@id": "https://alexstoneham.co.uk/#person" }
+        },
+        {
+          "@type": "ProfilePage",
+          "@id": "https://alexstoneham.co.uk/#webpage",
+          "url": "https://alexstoneham.co.uk/",
+          "name": "Alex Stoneham — Computer Science Student & Developer",
+          "isPartOf": { "@id": "https://alexstoneham.co.uk/#website" },
+          "about": { "@id": "https://alexstoneham.co.uk/#person" },
+          "primaryImageOfPage": { "@type": "ImageObject", "url": "https://alexstoneham.co.uk/cover.jpeg", "width": 1200, "height": 630 }
+        },
+        {
+          "@type": "Person",
+          "@id": "https://alexstoneham.co.uk/#person",
+          "name": "Alexander Stoneham",
+          "alternateName": "Alex Stoneham",
+          "url": "https://alexstoneham.co.uk/",
+          "image": "https://alexstoneham.co.uk/me.JPG",
+          "description": "Computer Science student at the University of St Andrews and software developer.",
+          "jobTitle": "Developer & Computer Science Student",
+          "email": "mailto:me@alexstoneham.co.uk",
+          "affiliation": {
+            "@type": "CollegeOrUniversity",
+            "name": "University of St Andrews",
+            "url": "https://www.st-andrews.ac.uk/"
+          },
+          "knowsAbout": ["Computer Science", "Systems programming", "C", "Java", "JavaScript", "React", "Tailwind CSS", "Artificial Intelligence", "Operating Systems"],
+          "sameAs": [
+            "https://github.com/astoneham1",
+            "https://linkedin.com/in/alexstoneham",
+            "https://projects.alexstoneham.co.uk"
+          ]
+        }
+      ]
     }
     </script>
 
-    <title>Alex Stoneham</title>
+    <title>Alex Stoneham — Computer Science Student & Developer</title>
+    <link rel="preload" as="image" href="/me.JPG" fetchpriority="high" />
     <script>
       try { localStorage.removeItem('theme') } catch (e) {}
       if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
@@ -58,10 +97,22 @@
         document.documentElement.classList.remove('dark')
       }
     </script>
-    <script type="module" crossorigin src="/assets/index-CwV4_QmH.js"></script>
+    <script type="module" crossorigin src="/assets/index-DVn0wnGu.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-UN7gos0q.css">
   </head>
 <body class="bg-white dark:bg-zinc-950 text-slate-900 dark:text-slate-50">
   <div id="root"></div>
+  <noscript>
+    <main style="max-width:42rem;margin:0 auto;padding:6rem 1.5rem;font-family:system-ui,sans-serif;line-height:1.6">
+      <h1>Alexander Stoneham</h1>
+      <p>Computer Science student at the University of St Andrews and software developer.</p>
+      <p>
+        <a href="https://projects.alexstoneham.co.uk">Projects</a> ·
+        <a href="https://github.com/astoneham1">GitHub</a> ·
+        <a href="https://linkedin.com/in/alexstoneham">LinkedIn</a> ·
+        <a href="mailto:me@alexstoneham.co.uk">Email</a>
+      </p>
+    </main>
+  </noscript>
 </body>
 </html>
