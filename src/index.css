@@ -63,6 +63,18 @@ html[data-glass-refract].dark .glass-bubble {
   backdrop-filter: url(#nav-glass-refract) blur(2px) saturate(170%) brightness(1.25);
 }
 
+/* Respect reduced-motion: skip animations/transitions but still land on their end state, so content that
+   starts at opacity-0 and fades in is shown straight away instead of staying hidden */
 @media (prefers-reduced-motion: reduce) {
-  .glass-bubble { transition: none !important; }
+  html { scroll-behavior: auto; }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+  }
 }

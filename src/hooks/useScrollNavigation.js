@@ -6,6 +6,9 @@ const ACTIVE_LINE_OFFSET = 180;
 // A programmatic scroll is considered finished once no scroll event has fired for this long
 const SETTLE_MS = 200;
 
+const smoothBehavior = () =>
+  window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth';
+
 const getHashTab = () => {
   const id = window.location.hash.slice(1);
   return TABS.some(tab => tab.id === id) ? id : null;
@@ -143,7 +146,7 @@ export const useScrollNavigation = (sectionRefs) => {
     // On Back/Forward the browser restores the exact scroll position; don't override it
     const navType = performance.getEntriesByType('navigation')[0]?.type;
     if (navType !== 'back_forward') scrollToHash('instant');
-    const onHashChange = () => scrollToHash('smooth');
+    const onHashChange = () => scrollToHash(smoothBehavior());
     window.addEventListener('hashchange', onHashChange);
     return () => window.removeEventListener('hashchange', onHashChange);
   }, [sectionRefs]);
@@ -155,9 +158,9 @@ export const useScrollNavigation = (sectionRefs) => {
     armSettle();
 
     if (id === 'intro') {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      window.scrollTo({ top: 0, behavior: smoothBehavior() });
     } else {
-      sectionRefs[id]?.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      sectionRefs[id]?.current?.scrollIntoView({ behavior: smoothBehavior(), block: 'start' });
     }
   }, [sectionRefs, armSettle]);
 
