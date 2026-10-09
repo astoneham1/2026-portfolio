@@ -1,0 +1,40 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Only one deploy at a time; a newer push cancels an older run that hasn't finished
+concurrency:
+  group: deploy
+  cancel-in-progress: true
+
+permissions:
+  contents: write # lets the job push the built site to the gh-pages branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm run lint
+
+      # Builds, prerenders and stamps the sitemap (the sitemap date comes from the latest commit)
+      - run: npm run build
+
+      # Publishes dist/ to the gh-pages branch, which GitHub Pages serves
+      - name: Publish to gh-pages
+        run: >
+          npx gh-pages -d dist
+          -r "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git"
+          -u "github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>"
+          -m "Deploy ${{ github.sha }}"
