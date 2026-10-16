@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { TABS } from '../constants/tabs';
+import type { useScrollNavigation } from '../hooks/useScrollNavigation';
 
 // Displacement map for the bubble's lens effect: red/green channels encode how far to shift
 // the backdrop horizontally/vertically, strongest at the edges and neutral (128) in the middle
@@ -13,7 +14,9 @@ const REFRACTION_MAP = `<svg xmlns='http://www.w3.org/2000/svg' width='100' heig
 <rect width='100' height='100' fill='url(#y)' style='mix-blend-mode:screen'/>
 </svg>`;
 
-export const Navbar = ({ activeTab, isDragging, navBarRef, bubbleRef, tabRefs, handleNavClick, dragHandlers }) => {
+type NavbarProps = ReturnType<typeof useScrollNavigation>;
+
+export const Navbar = ({ activeTab, isDragging, navBarRef, bubbleRef, tabRefs, handleNavClick, dragHandlers }: NavbarProps) => {
   // backdrop-filter: url(#svg) only works in Chromium; flag it so CSS can opt in to the refraction
   useEffect(() => {
     if ('userAgentData' in navigator) document.documentElement.dataset.glassRefract = '';

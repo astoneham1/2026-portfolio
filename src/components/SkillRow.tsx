@@ -1,4 +1,10 @@
-export const SkillRow = ({ category, skills }) => {
+interface SkillRowProps {
+  category: string;
+  /** An array, or a comma-separated string */
+  skills: string | string[];
+}
+
+export const SkillRow = ({ category, skills }: SkillRowProps) => {
   const skillList = Array.isArray(skills)
     ? skills
     : (typeof skills === 'string' ? skills.split(',').map(s => s.trim()) : []);

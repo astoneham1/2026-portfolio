@@ -1,4 +1,4 @@
-import React, { createRef, useState } from 'react';
+import { createRef, useState } from 'react';
 import { useTheme } from './hooks/useTheme';
 import { useScrollNavigation } from './hooks/useScrollNavigation';
 import { ThemeToggle } from './components/ThemeToggle';
@@ -7,16 +7,17 @@ import { IntroSection } from './sections/IntroSection';
 import { AboutSection } from './sections/AboutSection';
 import { ProjectsSection } from './sections/ProjectsSection';
 import { ContactSection } from './sections/ContactSection';
+import type { SectionRefs } from './constants/tabs';
 
 const App = () => {
   const { theme, cycleTheme } = useTheme();
 
   // Created once so the object identity is stable for hooks that depend on it
-  const [sectionRefs] = useState(() => ({
-    intro: createRef(),
-    about: createRef(),
-    projects: createRef(),
-    contact: createRef(),
+  const [sectionRefs] = useState<SectionRefs>(() => ({
+    intro: createRef<HTMLElement>(),
+    about: createRef<HTMLElement>(),
+    projects: createRef<HTMLElement>(),
+    contact: createRef<HTMLElement>(),
   }));
 
   const { activeTab, isDragging, navBarRef, bubbleRef, tabRefs, handleNavClick, dragHandlers } = useScrollNavigation(sectionRefs);

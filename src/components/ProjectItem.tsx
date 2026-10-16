@@ -1,18 +1,33 @@
 import { ArrowUpRight } from 'lucide-react';
 
-export const ProjectItem = ({ title, description, tags, link, banner, bannerLight, bannerDark, image, index }) => {
-  let lightSrc = null;
-  let darkSrc = null;
+interface ProjectItemProps {
+  title: string;
+  description: string;
+  /** An array, or a comma-separated string */
+  tags?: string | string[];
+  link: string;
+  /** One image for both themes, or a separate image per theme */
+  banner?: string | { light?: string; dark?: string };
+  bannerLight?: string;
+  bannerDark?: string;
+  image?: string;
+  /** Position in the grid, used to stagger the entrance animation */
+  index: number;
+}
+
+export const ProjectItem = ({ title, description, tags, link, banner, bannerLight, bannerDark, image, index }: ProjectItemProps) => {
+  let lightSrc: string | undefined;
+  let darkSrc: string | undefined;
 
   if (typeof banner === 'object' && banner !== null) {
-    lightSrc = banner.light || null;
-    darkSrc = banner.dark || null;
+    lightSrc = banner.light || undefined;
+    darkSrc = banner.dark || undefined;
   } else if (bannerLight || bannerDark) {
     lightSrc = bannerLight || banner || image;
     darkSrc = bannerDark || banner || image;
   } else {
-    lightSrc = banner || image || null;
-    darkSrc = banner || image || null;
+    lightSrc = banner || image || undefined;
+    darkSrc = banner || image || undefined;
   }
 
   const hasBanner = Boolean(lightSrc || darkSrc);

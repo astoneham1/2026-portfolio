@@ -9,7 +9,7 @@ const root = path.resolve(import.meta.dirname, '..');
 const dist = path.join(root, 'dist');
 const ssrDir = path.join(root, 'dist-ssr');
 
-const { render } = await import(pathToFileURL(path.join(ssrDir, 'entry-server.js')).href);
+const { render }: { render: () => string } = await import(pathToFileURL(path.join(ssrDir, 'entry-server.js')).href);
 
 const indexPath = path.join(dist, 'index.html');
 const template = await readFile(indexPath, 'utf8');

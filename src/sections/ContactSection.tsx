@@ -1,6 +1,7 @@
 import { Mail, Linkedin, Github, ArrowUpRight, MapPin } from 'lucide-react';
+import type { SectionRef } from '../constants/tabs';
 
-export const ContactSection = ({ sectionRef }) => (
+export const ContactSection = ({ sectionRef }: { sectionRef: SectionRef }) => (
   <section id="contact" ref={sectionRef} className="flex flex-col flex-1 space-y-8 min-h-[60vh] scroll-mt-20">
     <div className="animate-[fadeBlurIn_0.6s_ease-out_forwards]">
       <h2 className="text-2xl sm:text-3xl font-bold text-zinc-900 dark:text-zinc-100 tracking-tight mb-4">Let's Connect</h2>

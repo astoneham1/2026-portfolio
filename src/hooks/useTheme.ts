@@ -1,22 +1,24 @@
 import { useEffect, useState, useSyncExternalStore } from 'react';
 
+export type Theme = 'light' | 'dark';
+
 const DARK_QUERY = '(prefers-color-scheme: dark)';
 
-const subscribeToSystemTheme = (onChange) => {
+const subscribeToSystemTheme = (onChange: () => void) => {
   const query = window.matchMedia(DARK_QUERY);
   query.addEventListener('change', onChange);
   return () => query.removeEventListener('change', onChange);
 };
 
-const getSystemTheme = () => (window.matchMedia(DARK_QUERY).matches ? 'dark' : 'light');
+const getSystemTheme = (): Theme => (window.matchMedia(DARK_QUERY).matches ? 'dark' : 'light');
 
 // The prerendered HTML has no way of knowing the visitor's system theme
-const getServerTheme = () => 'light';
+const getServerTheme = (): Theme => 'light';
 
 export const useTheme = () => {
   // The theme follows the system until the toggle is used; the choice lasts for this page view only
   const systemTheme = useSyncExternalStore(subscribeToSystemTheme, getSystemTheme, getServerTheme);
-  const [override, setOverride] = useState(null);
+  const [override, setOverride] = useState<Theme | null>(null);
   const theme = override ?? systemTheme;
   const isDark = theme === 'dark';
 

@@ -1,34 +1,36 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { TABS } from '../constants/tabs';
+import type { PointerEvent } from 'react';
+import { TABS, isTabId } from '../constants/tabs';
+import type { SectionRefs, TabId } from '../constants/tabs';
 
 // A section counts as "current" when its top is closest to this far below the viewport top
 const ACTIVE_LINE_OFFSET = 180;
 // A programmatic scroll is considered finished once no scroll event has fired for this long
 const SETTLE_MS = 200;
 
-const smoothBehavior = () =>
+const smoothBehavior = (): ScrollBehavior =>
   window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth';
 
-const getHashTab = () => {
+const getHashTab = (): TabId | null => {
   const id = window.location.hash.slice(1);
-  return TABS.some(tab => tab.id === id) ? id : null;
+  return isTabId(id) ? id : null;
 };
 
-export const useScrollNavigation = (sectionRefs) => {
+export const useScrollNavigation = (sectionRefs: SectionRefs) => {
   // Always starts on 'intro' so it matches the prerendered HTML; the hash/scroll effects below move it
-  const [activeTab, setActiveTab] = useState('intro');
+  const [activeTab, setActiveTab] = useState<TabId>('intro');
   const [isDragging, setIsDragging] = useState(false);
 
-  const navBarRef = useRef(null);
-  const bubbleRef = useRef(null);
-  const tabRefs = useRef([]);
+  const navBarRef = useRef<HTMLDivElement>(null);
+  const bubbleRef = useRef<HTMLDivElement>(null);
+  const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
   // Mirrors of state for use inside event handlers and observers
   const activeTabRef = useRef(activeTab);
   const draggingRef = useRef(false);
   // True while a click/drag-initiated scroll is in flight, so scroll events don't fight the chosen tab
   const navigatingRef = useRef(false);
-  const settleTimer = useRef(null);
+  const settleTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   // The bubble is positioned straight on the DOM node: no re-render per drag move, no stale measurements
   const syncBubble = useCallback((animate = true) => {
@@ -40,7 +42,7 @@ export const useScrollNavigation = (sectionRefs) => {
     bubble.style.width = `${node.offsetWidth}px`;
     bubble.style.transform = `translateX(${node.offsetLeft}px)`;
     if (!animate) {
-      bubble.offsetWidth; // flush so the jump isn't animated once transitions are restored
+      void bubble.offsetWidth; // flush so the jump isn't animated once transitions are restored
       bubble.style.transition = '';
     }
 
@@ -59,7 +61,7 @@ export const useScrollNavigation = (sectionRefs) => {
     }
 
     const targetY = scrollY + ACTIVE_LINE_OFFSET;
-    let closestId = TABS[0].id;
+    let closestId: TabId = TABS[0].id;
     let closestDist = Infinity;
     for (const { id } of TABS) {
       const node = sectionRefs[id]?.current;
@@ -138,21 +140,22 @@ export const useScrollNavigation = (sectionRefs) => {
 
   // Jump to the linked section on first load, and follow manual hash edits
   useEffect(() => {
-    const scrollToHash = (behavior) => {
+    const scrollToHash = (behavior: ScrollBehavior) => {
       const id = getHashTab();
       if (!id || id === 'intro') return;
       sectionRefs[id]?.current?.scrollIntoView({ behavior, block: 'start' });
     };
 
     // On Back/Forward the browser restores the exact scroll position; don't override it
-    const navType = performance.getEntriesByType('navigation')[0]?.type;
+    const navEntry = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming | undefined;
+    const navType = navEntry?.type;
     if (navType !== 'back_forward') scrollToHash('instant');
     const onHashChange = () => scrollToHash(smoothBehavior());
     window.addEventListener('hashchange', onHashChange);
     return () => window.removeEventListener('hashchange', onHashChange);
   }, [sectionRefs]);
 
-  const handleNavClick = useCallback((id) => {
+  const handleNavClick = useCallback((id: TabId) => {
     // Commit to the chosen tab immediately; scroll events are ignored until the scroll settles
     navigatingRef.current = true;
     setActiveTab(id);
@@ -166,7 +169,7 @@ export const useScrollNavigation = (sectionRefs) => {
   }, [sectionRefs, armSettle]);
 
   // Slide the bubble to the pointer, interpolating between neighbouring tabs. Returns the nearest tab id.
-  const dragBubbleTo = useCallback((clientX) => {
+  const dragBubbleTo = useCallback((clientX: number): TabId => {
     const nav = navBarRef.current;
     const bubble = bubbleRef.current;
     if (!nav || !bubble) return activeTabRef.current;
@@ -180,20 +183,20 @@ export const useScrollNavigation = (sectionRefs) => {
         width: node.offsetWidth,
         center: node.offsetLeft + node.offsetWidth / 2,
       };
-    }).filter(Boolean);
+    }).filter(tab => tab !== null);
     if (tabs.length === 0) return activeTabRef.current;
 
     const first = tabs[0];
     const last = tabs[tabs.length - 1];
     let left = first.left;
     let width = first.width;
-    let nearest = first.id;
+    let nearest: TabId = first.id;
 
     if (pointerX >= last.center) {
       ({ left, width } = last);
       nearest = last.id;
     } else if (pointerX > first.center) {
-      const i = tabs.findIndex((tab, idx) => idx < tabs.length - 1 && pointerX <= tabs[idx + 1].center);
+      const i = tabs.findIndex((_tab, idx) => idx < tabs.length - 1 && pointerX <= tabs[idx + 1].center);
       const from = tabs[i];
       const to = tabs[i + 1];
       const progress = (pointerX - from.center) / (to.center - from.center);
@@ -215,17 +218,17 @@ export const useScrollNavigation = (sectionRefs) => {
 
   // Pointer capture keeps move/up events coming to the navbar even when the pointer leaves it
   const dragHandlers = {
-    onPointerDown: (e) => {
+    onPointerDown: (e: PointerEvent<HTMLDivElement>) => {
       if (e.button !== 0) return;
       e.currentTarget.setPointerCapture(e.pointerId);
       draggingRef.current = true;
       setIsDragging(true);
       dragBubbleTo(e.clientX);
     },
-    onPointerMove: (e) => {
+    onPointerMove: (e: PointerEvent<HTMLDivElement>) => {
       if (draggingRef.current) dragBubbleTo(e.clientX);
     },
-    onPointerUp: (e) => {
+    onPointerUp: (e: PointerEvent<HTMLDivElement>) => {
       if (!draggingRef.current) return;
       const id = dragBubbleTo(e.clientX);
       endDrag();

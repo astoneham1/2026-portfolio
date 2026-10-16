@@ -1,6 +1,11 @@
 import { ArrowUpRight } from 'lucide-react';
 
-export const SocialLink = ({ href, label }) => (
+interface SocialLinkProps {
+  href: string;
+  label: string;
+}
+
+export const SocialLink = ({ href, label }: SocialLinkProps) => (
   <a 
     href={href} 
     target="_blank" 

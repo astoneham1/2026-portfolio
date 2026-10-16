@@ -1,7 +1,8 @@
 import { ProjectItem } from '../components/ProjectItem';
 import { ArrowRight } from 'lucide-react';
+import type { SectionRef } from '../constants/tabs';
 
-export const ProjectsSection = ({ sectionRef }) => (
+export const ProjectsSection = ({ sectionRef }: { sectionRef: SectionRef }) => (
   <section id="projects" ref={sectionRef} className="flex flex-col flex-1 space-y-10 min-h-[70vh] scroll-mt-20">
     <h2 className="text-2xl sm:text-3xl font-bold text-zinc-900 dark:text-zinc-100 tracking-tight animate-[fadeBlurIn_0.6s_ease-out_forwards]">Selected Projects</h2>
     

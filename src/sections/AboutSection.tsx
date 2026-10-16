@@ -1,5 +1,5 @@
-import { SocialLink } from '../components/SocialLink';
 import { SkillRow } from '../components/SkillRow';
+import type { SectionRef } from '../constants/tabs';
 
 const BIRTH_DATE = new Date(2006, 6, 27);
 
@@ -11,7 +11,7 @@ const getAge = () => {
   return today.getFullYear() - BIRTH_DATE.getFullYear() - (hadBirthday ? 0 : 1);
 };
 
-export const AboutSection = ({ sectionRef }) => (
+export const AboutSection = ({ sectionRef }: { sectionRef: SectionRef }) => (
   <section id="about" ref={sectionRef} className="flex flex-col flex-1 space-y-12 min-h-[70vh] scroll-mt-20">
     <div className="animate-[fadeBlurIn_0.6s_ease-out_forwards]">
       <h2 className="text-2xl sm:text-3xl font-bold text-zinc-900 dark:text-zinc-100 tracking-tight mb-6">About Me</h2>

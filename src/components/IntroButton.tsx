@@ -1,6 +1,13 @@
+import type { ReactNode } from 'react';
 import { ArrowUpRight } from 'lucide-react';
 
-export const IntroButton = ({ href, label, icon }) => (
+interface IntroButtonProps {
+  href: string;
+  label: string;
+  icon?: ReactNode;
+}
+
+export const IntroButton = ({ href, label, icon }: IntroButtonProps) => (
   <a
     href={href}
     target="_blank"

@@ -1,7 +1,8 @@
 import { Linkedin, Github, FileText } from 'lucide-react';
 import { IntroButton } from '../components/IntroButton';
+import type { SectionRef } from '../constants/tabs';
 
-export const IntroSection = ({ sectionRef }) => (
+export const IntroSection = ({ sectionRef }: { sectionRef: SectionRef }) => (
   <section id="intro" ref={sectionRef} className="flex flex-col justify-center flex-1 min-h-[80vh] max-w-4xl mx-auto w-full -mt-12">
     <div className="flex flex-col lg:flex-row lg:items-center gap-8 lg:gap-12">
       {/* Profile Image */}

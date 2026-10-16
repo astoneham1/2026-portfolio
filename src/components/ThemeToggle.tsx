@@ -1,6 +1,12 @@
 import { Sun, Moon } from 'lucide-react';
+import type { Theme } from '../hooks/useTheme';
 
-export const ThemeToggle = ({ theme, cycleTheme }) => (
+interface ThemeToggleProps {
+  theme: Theme;
+  cycleTheme: () => void;
+}
+
+export const ThemeToggle = ({ theme, cycleTheme }: ThemeToggleProps) => (
   <button
     onClick={cycleTheme}
     className="fixed top-6 right-6 z-50 p-3 rounded-full border border-zinc-200/50 dark:border-zinc-800/50 bg-white/50 dark:bg-zinc-900/50 backdrop-blur-md backdrop-saturate-150 text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors duration-200 active:scale-95 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400 dark:focus-visible:ring-zinc-600 cursor-pointer"
